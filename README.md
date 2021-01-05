@@ -2,4 +2,4 @@
 
 Simple Maven Project
 
-to test builds
+ test builds
