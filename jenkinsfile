@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+ 
+   tools
+    {
+       maven "Maven"
+    }
+ stages {
+      stage('checkout') {
+           steps {
+             
+                git branch: 'master', url: 'git@github.com:narendra-tv/hello-world.git'
+             
+          }
+        }
+  stage('Execute Maven') {
+           steps {
+             
+                sh 'mvn package'             
+          }
+        }
+		stage('Docker Build and Tag') {
+           steps {
+              
+                sh 'docker build -t samplewebapp:latest .' 
+                sh 'docker tag samplewebapp narendratv/samplewebapp:latest'
+                //sh 'docker tag samplewebapp narendratv/samplewebapp:$BUILD_NUMBER'
+               
+          }
+        }
+     
+  stage('Publish image to Docker Hub') {
+          
+            steps {
+        withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+          sh  'docker push narendratv/samplewebapp:latest'
+        //  sh  'docker push narendratv/samplewebapp:$BUILD_NUMBER' 
+        }
+                  
+          }
+        }
+     
+      stage('Run Docker container on Jenkins Agent') {
+             
+            steps 
+   {
+                sh "docker run -d -p 8003:8080 narendratv/samplewebapp"
+ 
+            }
+        }
+ stage('Run Docker container on remote hosts') {
+             
+            steps {
+                sh "docker -H ssh://jenkins@ip-172-31-46-60  run -d -p 8003:8080 narendratv/samplewebapp"
+ 
+            }
+        }
+    }
+ }
