@@ -23,7 +23,7 @@ pipeline {
               
                 sh 'sudo docker build -t samplewebapp:latest .' 
                 sh 'sudo docker tag samplewebapp narendratv/samplewebapp:latest'
-                //sh 'docker tag samplewebapp narendratv/samplewebapp:$BUILD_NUMBER'
+               
                
           }
         }
@@ -33,7 +33,7 @@ pipeline {
             steps {
         withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
           sh  'sudo docker push narendratv/samplewebapp:latest'
-        //  sh  'sudo docker push narendratv/samplewebapp:$BUILD_NUMBER' 
+        
         }
                   
           }
