@@ -15,14 +15,14 @@ pipeline {
   stage('Execute Maven') {
            steps {
              
-                sh 'mvn package'             
+                sh 'sudo mvn package'             
           }
         }
 		stage('Docker Build and Tag') {
            steps {
               
-                sh 'docker build -t samplewebapp:latest .' 
-                sh 'docker tag samplewebapp narendratv/samplewebapp:latest'
+                sh 'sudo docker build -t samplewebapp:latest .' 
+                sh 'sudo docker tag samplewebapp narendratv/samplewebapp:latest'
                 //sh 'docker tag samplewebapp narendratv/samplewebapp:$BUILD_NUMBER'
                
           }
@@ -32,8 +32,8 @@ pipeline {
           
             steps {
         withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-          sh  'docker push narendratv/samplewebapp:latest'
-        //  sh  'docker push narendratv/samplewebapp:$BUILD_NUMBER' 
+          sh  'sudo docker push narendratv/samplewebapp:latest'
+        //  sh  'sudo docker push narendratv/samplewebapp:$BUILD_NUMBER' 
         }
                   
           }
@@ -43,14 +43,14 @@ pipeline {
              
             steps 
    {
-                sh "docker run -d -p 8003:8080 narendratv/samplewebapp"
+                sh "sudo docker run -d -p 8003:8080 narendratv/samplewebapp"
  
             }
         }
  stage('Run Docker container on remote hosts') {
              
             steps {
-                sh "docker -H ssh://jenkins@ip-172-31-34-243  run -d -p 8003:8080 narendratv/samplewebapp"
+                sh "sudo docker -H ssh://jenkins@ip-172-31-34-243: run -d -p 8003:8080 narendratv/samplewebapp"
  
             }
         }
