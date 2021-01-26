@@ -1,6 +1,9 @@
 pipeline {
     agent any
- 
+ tools
+    {
+       maven "Apache Maven 3.5.4 (Red Hat 3.5.4-5)"
+    }
    stages {
       stage('checkout') {
            steps {
